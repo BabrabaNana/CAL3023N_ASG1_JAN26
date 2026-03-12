@@ -107,23 +107,6 @@ package com.mycompany.dsa_asg1;
 					System.out.println(member.toString());
 				}
 		}
-			
-			public void viewMembersByStatus(String status) {
-				for (Member m : manager.getMemberList()) {
-					if (m.getMembershipStatus().equalsIgnoreCase(status)) {
-						displayMemberDetails(memID);
-						
-					}
-				}
-			}
-			
-			public void viewMembersByLevel(String membershipLevel) {
-				for (Member m : manager.updateMembershipLevel(null, null)) {
-					if (m.getMembershipLevel().equalsIgnoreCase(level)) {
-						displayMemberDetails(memID);
-					}
-				}
-			}
 	}
 
 	
