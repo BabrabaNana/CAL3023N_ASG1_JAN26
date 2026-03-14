@@ -4,7 +4,6 @@
  */
 package com.mycompany.dsa_asg1;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 import java.time.LocalDate;
 import java.time.Period;
@@ -13,20 +12,29 @@ import java.io.*;
 
 public class MemberManagement {
     
+    public static final String RESET = "\u001B[0m";
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String PURPLE = "\u001B[35m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String WHITE = "\u001B[37m";
+    
     
     private Scanner scanner = new Scanner(System.in);
     private LinkedList<Member> memberList = new LinkedList<>();
     
-//    //-----------------------------------------------------------------
-//    //Testing method
-//    public void addTestMember(Member member) {
-//        if (!isDuplicateMemberId(member.getMemberId())) {
-//            memberList.add(member);
-//        } else {
-//            System.out.println("Duplicate Member ID found. Test member not added.");
-//        }
-//    }
-//    //-----------------------------------------------------------------
+    //-----------------------------------------------------------------
+    //Testing method
+    public void addTestMember(Member member) {
+        if (!isDuplicateMemberId(member.getMemberId())) {
+            memberList.add(member);
+        } else {
+            System.out.println("Duplicate Member ID found. Test member not added.");
+        }
+    }
+    //-----------------------------------------------------------------
     
     // Add member
     public void registerMember(){
@@ -238,10 +246,10 @@ public class MemberManagement {
         }
         
         if(updated) {
+            System.out.println("\n========================================================");
             System.out.println("Membership status have been updated based on expiry dates.");
-        }else{
-            System.out.println("No memebership status updates were needed.");   
-        }   
+            System.out.println("========================================================\n");
+        } 
     }
     
     
@@ -300,7 +308,7 @@ public class MemberManagement {
         for (Member member : memberList) {
             if (member.getMembershipLevel().equalsIgnoreCase(membershipLevel)) {
                 System.out.println(member);
-                System.out.println("-----------------------------------");
+                System.out.println("--------------------------------------------------------------");
                 found = true;
             }
         }
@@ -332,6 +340,7 @@ public class MemberManagement {
             if(member.getMembershipStatus().equalsIgnoreCase(membershipStatus)) {
                 System.out.println("-------------------------------------------");
                  System.out.println(member);
+                 System.out.println("-------------------------------------------");
                  found = true;
             }
         }
@@ -513,7 +522,66 @@ public class MemberManagement {
 		return newExpiryDate;
 	}
         
-        // ====================================================== DC PART DONE HERE ======================================================
+        // Count the membership will expiry soon
+        public int countExpiringSoonMembers(){
+            LocalDate today = LocalDate.now();
+            LocalDate thresholdDate = today.plusDays(30);
+            
+            int count = 0;
+            
+            for (Member member : memberList) {
+                String expiryDate = member.getExpiryDate();
+                
+                if (isValidDate(expiryDate)) {
+                    LocalDate expiry = convertToLocalDate(expiryDate);
+                    
+                    if ((expiry.isEqual(today) || expiry.isAfter(today)) && (expiry.isEqual(thresholdDate)
+                            || expiry.isBefore(thresholdDate))) {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+        
+  
+        public void searchMembersExpiringSoon() {
+            LocalDate today = LocalDate.now();
+            LocalDate thresholdDate = today.plusDays(30);
+            
+            boolean found = false;
+            
+            System.out.println("\n===========================================");
+            System.out.println("         MEMBERS EXPIRING SOON             ");
+            System.out.println("      (within the next 30 days)            ");
+            System.out.println("===========================================");
+            
+            for (Member member : memberList) {
+                
+                String expiryDate = member.getExpiryDate();
+                
+                if (isValidDate(expiryDate)) {
+                    
+                    LocalDate expiry = convertToLocalDate(expiryDate);
+                    
+                    if ((expiry.isEqual(today) || expiry.isAfter(today)) &&
+                            (expiry.isEqual(thresholdDate) || expiry.isBefore(thresholdDate))) {
+                        System.out.println(member);
+                        System.out.println("-------------------------------------------");
+                        found = true;
+                    }
+                }
+            }
+            if (!found) {
+                System.out.println("No members are expiring within the next 30 days.");
+                System.out.println("------------------------------------------------\n");
+            }
+        }
+
+
+
+
+// ====================================================== DC PART DONE HERE ======================================================
 	
 	public void renewMembership(String memberId){
 		/*
@@ -527,6 +595,7 @@ public class MemberManagement {
 		
 		String level;
 		double fee;
+                
 		if(target==null) {
 			System.out.println("Member is not found");
 			return;
@@ -534,14 +603,24 @@ public class MemberManagement {
 			level = target.getMembershipLevel();
 			fee=getRenewalFee(level);
 		}
+                
+                LocalDate today = LocalDate.now();
+                LocalDate oldExpiry = convertToLocalDate(target.getExpiryDate());
 		
-		String oldDate=target.getExpiryDate();
-		String newDate=calculateExpiryDate(oldDate);
-		target.setExpiryDate(newDate);
+                String baseDate;
+                
+                if(oldExpiry.isBefore(today)){
+                    baseDate = today.format(DateTimeFormatter.ofPattern("dd-mm-yyyy"));
+                }else {
+                    baseDate = target.getExpiryDate();
+                }
+		//String oldDate=target.getExpiryDate();
+		String newDate=calculateExpiryDate(baseDate);
 		
+                target.setExpiryDate(newDate);
 		target.setMembershipStatus("Active");
 		
-		System.out.println("Renewal Successful");
+		System.out.println("Renewal Successful ");
 		System.out.println("Member ID: " + target.getMemberId());
 		System.out.println("Membership Level: " + level);
 		System.out.println("Renewal Fee: RM" + fee);
@@ -695,35 +774,15 @@ public class MemberManagement {
                 return;
             }
             
-            System.out.printf("\n%-15s %-20s %-18s %-18s\n", "ID", "Name", "Membership Level", "Membership Status" );
-            System.out.println("-----------------------------------------------------------------------------------");
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.printf("\n%-10s %-20s %-18s %-12s %-15s %-15s\n", "ID", "Name", "Level", "Status", "Join Date", "Expiry Date" );
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------");
             
             for (Member m : memberList) {
-                System.out.printf("%-15s %-20s %-15s %-10s\n" , m.getMemberId(), m.getName(), m.getMembershipLevel(), m.getMembershipStatus());
+                System.out.printf("%-10s %-20s %-18s %-12s %-15s %-15s\n",
+                        m.getMemberId(), m.getName(), m.getMembershipLevel(), m.getMembershipStatus(), m.getDateOfJoining(), m.getExpiryDate());
             }
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------");
         }
         
-        
-        
-        // Delete
-//	public void viewMembersByStatus (String status) {
-//	   for (Member m : manager.getMemberList()) {
-//	        if (m.getMembershipStatus(). equalsIgnoreCase(status)) {
-//            	displayMemberDetails(m);
-//	
-//	  }
-//	 }
-//	}
-//	
-//	public void viewMembersByLevel (String level) {
-//	   for (Member m : manager.getMemberList()) {
-//	        if (m.getMembershipLevel(). equalsIgnoreCase(level)){
-//	            displayMemberDetails(m);
-//	 
-//	  }
-//	 }
-//	}
-
-    
-	
 }
