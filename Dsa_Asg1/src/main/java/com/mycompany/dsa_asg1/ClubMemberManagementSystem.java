@@ -2,7 +2,7 @@ package com.mycompany.dsa_asg1;
 
 	import java.util.Scanner;
 
-	public class Driver {
+public class ClubMemberManagementSystem {
             public static final String RESET = "\u001B[0m";
             public static final String RED = "\u001B[31m";
             public static final String GREEN = "\u001B[32m";
@@ -13,42 +13,17 @@ package com.mycompany.dsa_asg1;
             public static final String WHITE = "\u001B[37m";
             
             private Scanner input = new Scanner (System.in);
-            private MemberManagement manager = new MemberManagement();
+            private MemberManagement manager = new MemberManagement(input);
                 
 		
 		public static void main (String[]args) {     
                     
-			Driver program = new Driver();
+			ClubMemberManagementSystem program = new ClubMemberManagementSystem();
                         
-                        System.out.println(" ____  _    __ __ _____     __  __  ____  __  __ _____  ____ _____     __  __   ____   __  _   ____   ____  ____  __  __  ____  __  _  _____      ____ __  __ ____  _____  ____  __  __    ");
+                        System.out.println(CYAN +" ____  _    __ __ _____     __  __  ____  __  __ _____  ____ _____     __  __   ____   __  _   ____   ____  ____  __  __  ____  __  _  _____      ____ __  __ ____  _____  ____  __  __    ");
                         System.out.println("/ (__`| |__|  |  || () )   |  \\/  || ===||  \\/  || () )| ===|| () )   |  \\/  | / () \\ |  \\| | / () \\ / (_,`| ===||  \\/  || ===||  \\| ||_   _|    (_ (_`\\ \\/ /(_ (_`|_   _|| ===||  \\/  |   ");
-                        System.out.println("\\____)|____|\\___/ |_()_)   |_|\\/|_||____||_|\\/|_||_()_)|____||_|\\_\\   |_|\\/|_|/__/\\__\\|_|\\__|/__/\\__\\\\____)|____||_|\\/|_||____||_|\\__|  |_|     .__)__) |__|.__)__)  |_|  |____||_|\\/|_|   ");
-                        
-//                        program.manager.addTestMember(new Member(
-//                                "M0001", "Alice", "20-04-2004", 21, "Female",
-//                                "012-3456789", "Penang", "Gold",
-//                                "01-09-2025", "Active", "20-03-2026"
-//                        ));
-//                        
-//                        program.manager.addTestMember(new Member(
-//                                "M0002", "John", "15-03-2003", 22, "Male",
-//                                "03-12345678", "KL", "Platinum",
-//                                "01-09-2025", "Active", "10-06-2026"
-//                        ));
-//                        
-//                        program.manager.addTestMember(new Member(
-//                                "M0003", "Siti", "01-01-2001", 25, "Female",
-//                                "011-23456789", "Kedah", "Diamond",
-//                                "01-09-2024", "Active", "01-03-2026"
-//                        ));
-//                        
-//                        program.manager.addTestMember(new Member(
-//                                "M0004", "Siti", "01-01-2001", 25, "Female",
-//                                "011-23456789", "Kedah", "Diamond",
-//                                "01-09-2024", "Active", "14-03-2026"
-//                        ));
-                        
-                        // LOAD FROM FILE...
+                        System.out.println("\\____)|____|\\___/ |_()_)   |_|\\/|_||____||_|\\/|_||_()_)|____||_|\\_\\   |_|\\/|_|/__/\\__\\|_|\\__|/__/\\__\\\\____)|____||_|\\/|_||____||_|\\__|  |_|     .__)__) |__|.__)__)  |_|  |____||_|\\/|_|   " +RESET);
+//                       
                         program.manager.loadFromFile();
                         program.showMainMenu();
                                      
@@ -64,7 +39,7 @@ package com.mycompany.dsa_asg1;
                             manager.updateMembershipStatusByExpiry();
                             int expiringSoonCount = manager.countExpiringSoonMembers();
                             
-                            System.out.println(" \n===== CLUB MEMBER MANAGEMENT SYSTEM =====");
+                            System.out.println(BLUE+" \n===== CLUB MEMBER MANAGEMENT SYSTEM ====="+RESET);
                             System.out.println("Expiring Soon Members: " + expiringSoonCount);
                             System.out.println("1. Register New Member ");
                             System.out.println("2. Search Member ");
@@ -119,7 +94,7 @@ package com.mycompany.dsa_asg1;
 				case 3:
                                     boolean retryUpdate = true;
                                     while (retryUpdate) {
-					System.out.println("Enter Member ID to update: ");
+					System.out.print("Enter Member ID to update: ");
 					String updateMem = input.nextLine().trim();
                                         
                                         Member member = manager.searchMemberById(updateMem);
@@ -128,7 +103,7 @@ package com.mycompany.dsa_asg1;
                                             showUpdateSubMenu(updateMem);
                                             retryUpdate = false;
                                         } else {
-                                            System.out.println("Member Not Found!!");
+                                            System.out.println(RED+"Member Not Found!!"+RESET);
                                             retryUpdate = askTryAgain();
                                         }
                                     }
@@ -145,27 +120,27 @@ package com.mycompany.dsa_asg1;
                                             manager.renewMembership(renewMem);
                                             retryRenew = false;
                                         } else {
-                                            System.out.println("Member is not found.");
+                                            System.out.println(RED+"Member Not Found!!"+RESET);
                                             retryRenew = askTryAgain();
                                         }
                                     }
                                     break;
-                                    
-                                    case 5:
+                                
+                                case 5:
                                         boolean retryDelete = true;
                                         while (retryDelete) {
                                             System.out.print("Enter Member ID to delete: ");
                                             String deleteMem = input.nextLine().trim();
                                             Member member = manager.searchMemberById(deleteMem);
                                             if (member != null) {
-                                                if (askForConfirmation("Are you sure you want to delete this member?")) {
+                                                if (askForConfirmation(PURPLE+"Are you sure you want to delete this member?"+RESET)) {
                                                     manager.deleteMember(deleteMem);
                                                 } else {
-                                                    System.out.println("Delete operation cancelled.");
+                                                    System.out.println(YELLOW+"Delete operation cancelled."+RESET);
                                                 }
                                                 retryDelete = false;
                                             } else {
-                                                System.out.println("Member is not found.");
+                                                System.out.println(RED+"Member is not found."+RESET);
                                                 retryDelete = askTryAgain();
                                             }
                                         }
@@ -186,7 +161,7 @@ package com.mycompany.dsa_asg1;
                                             manager.searchMembersByMembershipStatus(status);
                                             retryStatus = false;
                                         }else{
-                                            System.out.println("Invalid membership status");
+                                            System.out.println(RED+"Invalid membership status"+RESET);
                                             retryStatus = askTryAgain();
                                         }    
                                     }
@@ -195,7 +170,7 @@ package com.mycompany.dsa_asg1;
 				case 8:
                                     boolean retryLevel = true;
                                     while (retryLevel) {
-                                        System.out.print("Membership Level: = Gold | Platinum | Diamond =   ");
+                                        System.out.print("Membership Level: = Gold | Platinum | Diamond = \n");
                                         System.out.print("Enter Membership Level: ");
                                         String level = input.nextLine().trim();
                                         
@@ -204,7 +179,7 @@ package com.mycompany.dsa_asg1;
                                             manager.searchMembersByMembershipLevel(level);
                                             retryLevel = false;
                                         } else {
-                                            System.out.println("Invalid membership level.");
+                                            System.out.println(RED+"Invalid membership level."+RESET);
                                             retryLevel = askTryAgain();
                                         }
                                     }
@@ -217,11 +192,11 @@ package com.mycompany.dsa_asg1;
 				case 0:
                                     // SAVE TO FILE
                                     manager.saveToFile();
-                                    System.out.println("Exiting System...Goodbye! ");
+                                    System.out.println(YELLOW+"Exiting System...Goodbye! "+RESET);
                                     break;
 				
 				default:
-					System.out.println("Invalid choice!");				
+					System.out.println(RED+"Invalid choice!"+RESET);				
 			
 				}
 			}
@@ -231,9 +206,9 @@ package com.mycompany.dsa_asg1;
 				if (member == null) {
 					System.out.println(RED + "[ Member not found. ]" + RESET);
 				}else {
-					System.out.println("\n===== DETAILS =====");
+					System.out.println(CYAN+"\n===== DETAILS ====="+RESET);
 					System.out.println(member.toString());
-                                        System.out.println("\n===================");
+                                        System.out.println("===================\n");
 				}
 		}
                         
@@ -247,14 +222,14 @@ package com.mycompany.dsa_asg1;
                             
                             if(target == null){
                                 
-                                System.out.println("Member Not Found!!");
+                                System.out.println(RED+"Member Not Found!!"+RESET);
                                 return; 
                             }
                             
                             int choice = -1;
                             
                             while(choice != 0){
-                                System.out.println("\n===== UPDATE MEMBER INFORMATION =====");
+                                System.out.println(BLUE+"\n===== UPDATE MEMBER INFORMATION ====="+RESET);
                                 System.out.println("Member ID: " + memberId);
                                 System.out.println("1. Update Contact Number");
                                 System.out.println("2. Update Address");
@@ -268,34 +243,34 @@ package com.mycompany.dsa_asg1;
                                     
                                     switch (choice) {
                                         case 1:
-                                            System.out.print("Enter new contact number: ");
+                                            System.out.print(CYAN+"Enter new contact number: "+RESET);
                                             String newContactNumber = input.nextLine().trim();
                                             manager.updateContactNumber(memberId, newContactNumber);
                                             break;
                                         case 2:
-                                            System.out.print("Enter new address: ");
+                                            System.out.print(CYAN+"Enter new address: "+RESET);
                                             String newAddress = input.nextLine().trim();
                                             manager.updateAddress(memberId, newAddress);
                                             break;
                                         case 3:
-                                            System.out.print("Enter new membership level (Gold/Platinum/Diamond): ");
+                                            System.out.print(CYAN+"Enter new membership level (Gold/Platinum/Diamond): "+RESET);
                                             String newLevel = input.nextLine().trim();
                                             manager.updateMembershipLevel(memberId, newLevel);
                                             break;
                                         
                                         case 4:
-                                            if (askForConfirmation("Are you sure you want to cancel this membership?")) {
+                                            if (askForConfirmation(PURPLE+"Are you sure you want to cancel this membership?"+RESET)) {
                                                 manager.cancelMembership(memberId); 
                                             }else {
-                                                System.out.println("Cancel membership operation cancelled.");   
+                                                System.out.println(YELLOW+"Cancel membership operation cancelled."+RESET);   
                                             }
                                             break;
                                             
                                         case 0:
-                                            System.out.println("Returning to main menu...");
+                                            System.out.println(GREEN+"Returning to main menu..."+RESET);
                                             break;
                                         default:
-                                            System.out.println("Invalid choice!");
+                                            System.out.println(RED+"Invalid choice!"+RESET);
                                     }
                                 } catch (NumberFormatException e) {
                                     System.out.println(RED + "[ Please enter a valid number. ]" + RESET);
@@ -314,7 +289,7 @@ package com.mycompany.dsa_asg1;
                                 } else if (choice.equalsIgnoreCase("N")) {
                                     return false;
                                 } else {
-                                    System.out.println("Invalid input. Please enter Y or N.");
+                                    System.out.println(RED+"Invalid input. Please enter Y or N."+RESET);
        
                                 }
                             }
@@ -330,7 +305,7 @@ package com.mycompany.dsa_asg1;
                                 }else if(choice.equalsIgnoreCase("N")) {
                                     return false;
                                 }else{
-                                    System.out.println("Invalid input. Please enter Y or N only...");
+                                    System.out.println(RED+"Invalid input. Please enter Y or N only..."+RESET);
                                 }
                             }
                         }

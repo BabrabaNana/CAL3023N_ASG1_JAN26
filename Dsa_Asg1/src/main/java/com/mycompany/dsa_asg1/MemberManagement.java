@@ -21,21 +21,21 @@ public class MemberManagement {
     public static final String CYAN = "\u001B[36m";
     public static final String WHITE = "\u001B[37m";
     
-    
-    private Scanner scanner = new Scanner(System.in);
+
     private LinkedList<Member> memberList = new LinkedList<>();
+    private Scanner scanner;
     
-    //-----------------------------------------------------------------
-    //Testing method
-    public void addTestMember(Member member) {
-        if (!isDuplicateMemberId(member.getMemberId())) {
-            memberList.add(member);
-        } else {
-            System.out.println("Duplicate Member ID found. Test member not added.");
-        }
+    public MemberManagement(Scanner scanner){
+        this.scanner = scanner;
     }
-    //-----------------------------------------------------------------
     
+    
+    
+    
+  
+    //==========================================
+    // +++++++ Registration ++++++++ 
+    // ==========================================
     // Add member
     public void registerMember(){
         LocalDate today = LocalDate.now();
@@ -52,10 +52,7 @@ public class MemberManagement {
         String membershipStatus;
         String expiryDate = calculateExpiryDate(dateOfJoining);
         
-   // ==========================================
-    //      +++++++ USER INPUT ++++++++ -DC
-   // ==========================================
-        System.out.println("\n=== Register New Member ===");
+        System.out.println(BLUE+"\n=== Register New Member ==="+RESET);
         System.out.println("Member ID: " + memberId);
         System.out.println("-----------------------");
         
@@ -65,7 +62,7 @@ public class MemberManagement {
             name = scanner.nextLine().trim();
             
             if (name.isEmpty()) {
-            System.out.println("Name cannot be empty.");
+            System.out.println(RED+"Name cannot be empty."+RESET);
             }
         } while (name.isEmpty());
         
@@ -77,8 +74,8 @@ public class MemberManagement {
         age = calculateAge(dateOfBirth);
 
         if (age == -1) {
-            System.out.println("Invalid date of birth.");
-            System.out.println("Please use dd-mm-yyyy and ensure it is not a future date.");
+            System.out.println(RED+"Invalid date of birth."+RESET);
+            System.out.println(RED+"Please use dd-mm-yyyy and ensure it is not a future date."+RESET);
         }
     } while (age == -1);
     
@@ -89,7 +86,7 @@ public class MemberManagement {
         gender = scanner.nextLine().trim();
 
         if (!isValidGender(gender)) {
-            System.out.println("Invalid gender. Please enter Male or Female.");
+            System.out.println(RED+"Invalid gender. Please enter Male or Female."+RESET);
         }
     } while (!isValidGender(gender));
     
@@ -99,10 +96,10 @@ public class MemberManagement {
         contactNumber = scanner.nextLine().trim();
 
         if (!isValidContactNumber(contactNumber)) {
-            System.out.println("Invalid contact number format.");
+            System.out.println(RED+"Invalid contact number format.");
             System.out.println("Examples:");
             System.out.println("Mobile: 0123456789 / 012-3456789 / 01123456789 / 011-23456789");
-            System.out.println("Landline: 03-12345678 / 0312345678 / 082-123456 / 082123456");
+            System.out.println("Landline: 03-12345678 / 0312345678 / 082-123456 / 082123456"+RESET);
         }
     } while (!isValidContactNumber(contactNumber));
     
@@ -112,7 +109,7 @@ public class MemberManagement {
         address = scanner.nextLine().trim();
 
         if (!isValidAddress(address)) {
-            System.out.println("Address cannot be empty.");
+            System.out.println(RED+"Address cannot be empty."+RESET);
         }
     } while (!isValidAddress(address));
     
@@ -122,7 +119,7 @@ public class MemberManagement {
         membershipLevel = scanner.nextLine().trim();
 
         if (!isValidMembershipLevel(membershipLevel)) {
-            System.out.println("Invalid membership level. Please enter Gold, Platinum, or Diamond.");
+            System.out.println(RED+"Invalid membership level. Please enter Gold, Platinum, or Diamond."+RESET);
         }
     } while (!isValidMembershipLevel(membershipLevel));
     
@@ -132,7 +129,7 @@ public class MemberManagement {
         membershipStatus = scanner.nextLine().trim();
 
         if (!isValidMembershipStatus(membershipStatus)) {
-            System.out.println("Invalid membership status. Please enter Active or Inactive.");
+            System.out.println(RED+"Invalid membership status. Please enter Active or Inactive."+RESET);
         }
 
     } while (!isValidMembershipStatus(membershipStatus));
@@ -158,43 +155,19 @@ public class MemberManagement {
     memberList.add(newMember);
     
     // Display output here!
-    System.out.println("\n======================================");
+    System.out.println(GREEN+"\n======================================");
     System.out.println("=      Registration Successful       =");
-    System.out.println("======================================");
+    System.out.println("======================================"+RESET);
     System.out.println("Registration Fee | " + registrationFee);
     System.out.println("Expiry Date      | " + expiryDate);
-    System.out.println("--------------------------------------");
+    System.out.println(BLUE+"--------------------------------------");
     System.out.println("Member Details");
-    System.out.println("-------------------");
-    System.out.println(newMember);
     System.out.println("--------------------------------------");
+    System.out.println(newMember);
+    System.out.println("--------------------------------------"+RESET);
         
     }
     
-    
-   // Validation method
-    
-//FEE AND EXPIRY DATE - helper method
-    //getRegistrationFee(String membershipLevel) , calculateExpiryDate(String joinOrRenewDate) - Done
- //SEARCH
-    //searchMemberById(String memberId) -Suki Done
-    //searchMembersByMembershipLevel(String membershipLevel)
-    //searchMembersByMembershipStatus(String membershipStatus)
-// VALIDATION
-    //isDuplicateMemberId(String memberId) -Done
-    //isValidGender(String gender) -Done
-    //isValidContactNumber(String contactNumber) -Done
-    //isValidMembershipLevel(String membershipLevel) -Done
-    //isValidMembershipStatus(String membershipStatus) -Done
-    //isValidAddress(String address) -Done
-    //calculateAge(String dateOfBirth) -Done
-// ADDITIONAL
-    // isLeapYear //isValidDate
-
-    
-    //==========================================
-    // +++++++ GENERATE MEMBER ID ++++++++ -DC
-   // ==========================================
     public String generateMemberId() {
         int nextNumber = memberList.size() + 1;
         String newId = String.format("M%04d", nextNumber);
@@ -206,12 +179,6 @@ public class MemberManagement {
         return newId;
     }
     
-    
-    
-    
-   // ==========================================
-    // +++++++  GET REGISTER FEE ++++++++ -DC
-   // ==========================================
     public double getRegistrationFee(String membershipLevel) {
         
        if(membershipLevel.equalsIgnoreCase("Gold")){
@@ -225,150 +192,20 @@ public class MemberManagement {
        }  
     }
     
-   // ==========================================
-    // ++++    UPDATE MEMBERSHIP STATUS   +++++ -DC
-   // ==========================================
-    public void updateMembershipStatusByExpiry(){
-        LocalDate today = LocalDate.now();
-        boolean updated = false;
-        
-        for(Member member : memberList){
-            String expiryDate = member.getExpiryDate();
-            
-            if(isValidDate(expiryDate)){
-                LocalDate expiry = convertToLocalDate(expiryDate);
-                
-                if(expiry.isBefore(today) && !member.getMembershipStatus().equalsIgnoreCase("Inactive")){
-                    member.setMembershipStatus("Inactive");
-                    updated = true;
-                }
-            }
-        }
-        
-        if(updated) {
-            System.out.println("\n========================================================");
-            System.out.println("Membership status have been updated based on expiry dates.");
-            System.out.println("========================================================\n");
-        } 
-    }
+    public int getRenewalFee(String membershipLevel) {
+		if(membershipLevel.equalsIgnoreCase("Gold")) {
+			return 80;
+		}else if(membershipLevel.equalsIgnoreCase("Platinum")) {
+			return 110;
+		}else if(membershipLevel.equalsIgnoreCase("Diamond")) {
+			return 150;
+		}
+		return 0;//default
+	}
     
-    
-   // ==========================================
-    // +++++++  SEARCH METHOD ++++++++ -DC - we using linear search(linked list)
-   // ==========================================
-    
-    // - Search Membership by Id -Suki
-    
-    /* SUKI
-     * 1. Search
-     * searchMemberById
-     * 
-     * 2. Renew
-     * calculateExpiryDate(String baseDate)
-     * renewMembership(String memberId)
-     * 
-     * 3. Update
-     * updateContactNumber(String memberId,String newContactNumber)
-     * updateAddress(String memberId,String address)
-     * updateMembershipLevel(String memberId,String level)
-     * cancelMembership(String memberId)
-     * 
-     * 4. Delete
-     * deleteMember(String memberId)
-     * 
-     * 5. Text file(Storage)
-     * saveToFile()
-     * loadFromFile()
-     * 
-     * 6. Testing
-     */
-    
-	
-    public Member searchMemberById(String memberId){
-    	for(int i =0;i<memberList.size();i++) {
-    		Member m=memberList.get(i);
-    		if(m.getMemberId().equalsIgnoreCase(memberId)) {
-    			return m;
-    		}
-    	}
-    	return null;
-    }
-    
-    // - Search Membership by level
-    public void searchMembersByMembershipLevel(String membershipLevel) {
-        // check first it's the level is valid
-        if (!isValidMembershipLevel(membershipLevel)) {
-            System.out.println("Invalid membership level.");
-            System.out.println("Please enter Gold, Platinum, or Diamond.");
-            return;
-        }
-        boolean found = false;
-        
-        System.out.println("\n=== Search Result by Membership Level: " + membershipLevel + " ===");
-        for (Member member : memberList) {
-            if (member.getMembershipLevel().equalsIgnoreCase(membershipLevel)) {
-                System.out.println(member);
-                System.out.println("--------------------------------------------------------------");
-                found = true;
-            }
-        }
-        if (!found) {
-            System.out.println("No members found with membership level: " + membershipLevel);
-        }
-    }
-    
-    // - Search Membership by status
-    //First, check whether the input status is valid
-    public void searchMembersByMembershipStatus(String membershipStatus){
-        boolean found = false;
-        
-        // to update the latest version before search.
-        updateMembershipStatusByExpiry();
-        
-        if(!isValidMembershipStatus(membershipStatus)){
-            System.out.println("Invalid membership status.");
-            System.out.println("Please enter Active or Inactive.");
-            return;
-        }
-        
-        System.out.println("-------------------------------------------");
-        System.out.println("                MEMBER STATUS              ");
-        System.out.println("-------------------------------------------");
-        System.out.println("          " + membershipStatus + "         ");
-        
-        for(Member member : memberList) {
-            if(member.getMembershipStatus().equalsIgnoreCase(membershipStatus)) {
-                System.out.println("-------------------------------------------");
-                 System.out.println(member);
-                 System.out.println("-------------------------------------------");
-                 found = true;
-            }
-        }
-        
-        if (!found) {
-            System.out.println("No member found with membership status: " + membershipStatus);
-        }
-    }
-    
-    
-   // ==========================================
-    // +++++++  Date Convertor ++++++++ -DC
-   // ==========================================
-    public LocalDate convertToLocalDate(String dateStr) {
-        String[] parts = dateStr.split("-");
-        
-        int day = Integer.parseInt(parts[0]);
-        int month = Integer.parseInt(parts[1]);
-        int year = Integer.parseInt(parts[2]);
-        
-        return LocalDate.of(year, month, day);
-    }
-    
-   
-    
-   // ==========================================
-    // +++++++  VALIDATION METHOD ++++++++ -DC
-   // ==========================================
+    // ==========================================
+    // +++++++  VALIDATION METHOD ++++++++ 
+    // ==========================================
     public boolean isDuplicateMemberId(String memberId) {
         for (Member member : memberList) {
             if (member.getMemberId().equalsIgnoreCase(memberId)) {
@@ -377,8 +214,6 @@ public class MemberManagement {
         }
         return false;
     }
-       
-    
     
     public boolean isValidGender(String gender) {
         return gender.equalsIgnoreCase("Male") || gender.equalsIgnoreCase("Female");
@@ -423,7 +258,11 @@ public class MemberManagement {
     public boolean isValidAddress(String address) {
         return !address.trim().isEmpty();
     }
-
+    
+    // ==========================================
+    // +++++++  Date & Age Processing ++++++++ 
+    // ==========================================
+    
     public int calculateAge(String dateOfBirth) {
         if (!isValidDate(dateOfBirth)) {
             return -1;
@@ -438,8 +277,18 @@ public class MemberManagement {
         
         return Period.between(dob, today).getYears();
     }
-
     
+    public LocalDate convertToLocalDate(String dateStr) {
+        String[] parts = dateStr.split("-");
+        
+        int day = Integer.parseInt(parts[0]);
+        int month = Integer.parseInt(parts[1]);
+        int year = Integer.parseInt(parts[2]);
+        
+        return LocalDate.of(year, month, day);
+    }
+    
+   
     // Check the user input date Format
     public boolean isValidDate(String dateStr) {
         if (!dateStr.matches("\\d{2}-\\d{2}-\\d{4}")) {
@@ -489,54 +338,50 @@ public class MemberManagement {
         return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
     }
     
-	
-	public int getRenewalFee(String membershipLevel) {
-		if(membershipLevel.equalsIgnoreCase("Gold")) {
-			return 80;
-		}else if(membershipLevel.equalsIgnoreCase("Platinum")) {
-			return 110;
-		}else if(membershipLevel.equalsIgnoreCase("Diamond")) {
-			return 150;
-		}
-		return 0;//default
-	}
-	
-	public String calculateExpiryDate(String baseDate) {
-		//if(!isValidDate(baseDate)) {
-		//	return;
-		//}
-		//format = dd-mm-yyyy
-		// 1. Use "-" to split the string into three parts(Array List):
-		// parts[0] is date, parts[1] is month, parts[2] is year.
-		String[] parts = baseDate.split("-"); 
-		
-		// 2. Convert the parts[2] into integer.
-		int year = Integer.parseInt(parts[2]);
-		
-		// 3. Add 1 to the year
-		year = year + 1;
-		
-		// 4. Reassemble them into a string using "-" and go back.
-		String newExpiryDate = parts[0] + "-" + parts[1] + "-" + year;
-		
-		return newExpiryDate;
-	}
+    // ==========================================
+    // +++++++  Expiry & Status Monitoring ++++++++ 
+    // ==========================================
+    
+        public void updateMembershipStatusByExpiry(){
+            LocalDate today = LocalDate.now();
+            boolean updated = false;
+            
+            for(Member member : memberList){
+                String expiryDate = member.getExpiryDate();
+                
+                if(isValidDate(expiryDate)){
+                    LocalDate expiry = convertToLocalDate(expiryDate);
+                    
+                    if(expiry.isBefore(today) && !member.getMembershipStatus().equalsIgnoreCase("Inactive")){
+                        member.setMembershipStatus("Inactive");
+                        updated = true;
+                    }
+                }
+            }
+            
+            if(updated) {
+                System.out.println(BLUE+"\n========================================================");
+                System.out.println("Membership status have been updated based on expiry dates.");
+                System.out.println("========================================================\n"+RESET);
+            } 
+        }
         
-        // Count the membership will expiry soon
-        public int countExpiringSoonMembers(){
+        
+      
+     // Count the membership will expiry soon
+        public int countExpiringSoonMembers() {
             LocalDate today = LocalDate.now();
             LocalDate thresholdDate = today.plusDays(30);
             
             int count = 0;
-            
             for (Member member : memberList) {
                 String expiryDate = member.getExpiryDate();
                 
-                if (isValidDate(expiryDate)) {
+                if (member.getMembershipStatus().equalsIgnoreCase("Active") && isValidDate(expiryDate)) {
                     LocalDate expiry = convertToLocalDate(expiryDate);
                     
-                    if ((expiry.isEqual(today) || expiry.isAfter(today)) && (expiry.isEqual(thresholdDate)
-                            || expiry.isBefore(thresholdDate))) {
+                    if ((expiry.isEqual(today) || expiry.isAfter(today)) &&
+                            (expiry.isEqual(thresholdDate) || expiry.isBefore(thresholdDate))) {
                         count++;
                     }
                 }
@@ -544,87 +389,192 @@ public class MemberManagement {
             return count;
         }
         
-  
         public void searchMembersExpiringSoon() {
             LocalDate today = LocalDate.now();
             LocalDate thresholdDate = today.plusDays(30);
             
             boolean found = false;
             
-            System.out.println("\n===========================================");
+            System.out.println(BLUE + "\n===========================================");
             System.out.println("         MEMBERS EXPIRING SOON             ");
             System.out.println("      (within the next 30 days)            ");
-            System.out.println("===========================================");
+            System.out.println("===========================================" + RESET);
             
             for (Member member : memberList) {
-                
                 String expiryDate = member.getExpiryDate();
-                
-                if (isValidDate(expiryDate)) {
-                    
+                if (member.getMembershipStatus().equalsIgnoreCase("Active") && isValidDate(expiryDate)) {
                     LocalDate expiry = convertToLocalDate(expiryDate);
-                    
                     if ((expiry.isEqual(today) || expiry.isAfter(today)) &&
                             (expiry.isEqual(thresholdDate) || expiry.isBefore(thresholdDate))) {
                         System.out.println(member);
-                        System.out.println("-------------------------------------------");
+                        System.out.println(BLUE + "-------------------------------------------" + RESET);
                         found = true;
                     }
                 }
             }
+            
             if (!found) {
-                System.out.println("No members are expiring within the next 30 days.");
-                System.out.println("------------------------------------------------\n");
+                System.out.println(RED + "No active members are expiring within the next 30 days." + RESET);
+                System.out.println(BLUE + "------------------------------------------------\n" + RESET);
             }
         }
+        
+     // ==========================================
+     // +++++++  Filter & Display ++++++++ 
+     // ==========================================
+    
+    // - Search Membership by level
+    public void searchMembersByMembershipLevel(String membershipLevel) {
+        // check first it's the level is valid
+        if (!isValidMembershipLevel(membershipLevel)) {
+            System.out.println(RED+"Invalid membership level.");
+            System.out.println("Please enter Gold, Platinum, or Diamond."+RESET);
+            return;
+        }
+        boolean found = false;
+        
+        System.out.println(BLUE+"\n=== Search Result by Membership Level: " + membershipLevel + " ==="+ RESET);
+        for (Member member : memberList) {
+            if (member.getMembershipLevel().equalsIgnoreCase(membershipLevel)) {
+                System.out.println(member);
+                System.out.println(BLUE+"--------------------------------------------------------------"+RESET);
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println(RED+"No members found with membership level: " + membershipLevel+RESET);
+        }
+    }
+    
+    // - Search Membership by status
+    //First, check whether the input status is valid
+    public void searchMembersByMembershipStatus(String membershipStatus){
+        boolean found = false;
+        
+        // to update the latest version before search.
+        updateMembershipStatusByExpiry();
+        
+        if(!isValidMembershipStatus(membershipStatus)){
+            System.out.println(RED+"Invalid membership status.");
+            System.out.println("Please enter Active or Inactive."+RESET);
+            return;
+        }
+        
+        System.out.println(BLUE+"-------------------------------------------");
+        System.out.println("                MEMBER STATUS              ");
+        System.out.println("-------------------------------------------");
+        System.out.println("                   " + membershipStatus + "                  "+RESET);
+        
+        for(Member member : memberList) {
+            if(member.getMembershipStatus().equalsIgnoreCase(membershipStatus)) {
+                System.out.println(BLUE+"-------------------------------------------"+RESET);
+                 System.out.println(member);
+                 System.out.println(BLUE+"-------------------------------------------"+RESET);
+                 found = true;
+            }
+        }
+        
+        if (!found) {
+            System.out.println(RED+"No member found with membership status: " + membershipStatus+RESET);
+        }
+    }
+    
+    
+        
+        public void viewAllMembers() {
+            
+            if (memberList.isEmpty()) {
+                System.out.println(RED+"No members in system."+RESET);
+                return;
+            }
+            
+            System.out.print(CYAN +"-------------------------------------------------------------------------------------------------------------------------------------");
+            System.out.printf("\n%-10s %-20s %-18s %-12s %-15s %-15s\n", "ID", "Name", "Level", "Status", "Join Date", "Expiry Date" );
+            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------"+RESET);
+            
+            for (Member m : memberList) {
+                System.out.printf("%-10s %-20s %-18s %-12s %-15s %-15s\n",
+                        m.getMemberId(), m.getName(), m.getMembershipLevel(), m.getMembershipStatus(), m.getDateOfJoining(), m.getExpiryDate());
+            }
+            System.out.println(CYAN +"-------------------------------------------------------------------------------------------------------------------------------------"+RESET);
+        }
 
-
-
-
-// ====================================================== DC PART DONE HERE ======================================================
-	
-	public void renewMembership(String memberId){
-		/*
-		 * 1. Find the member (by Member ID).
-		 * 2. Display the renewal amount (calling the `getRenewalFee function).
-		 * 3. Expiration date + 1 year (calling the `calculateExpiryDate` function).
-		 * 4. Update the status to Active (in case it was previously Inactive).
-		*/
+        
+        public Member searchMemberById(String memberId){
+        	for(int i =0;i<memberList.size();i++) {
+        		Member m=memberList.get(i);
+        		if(m.getMemberId().equalsIgnoreCase(memberId)) {
+        			return m;
+        		}
+        	}
+        	return null;
+        } 
+        
+       public String calculateExpiryDate(String baseDate) {
+    		
+    		// 1. Use "-" to split the string into three parts(Array List):
+    		// parts[0] is date, parts[1] is month, parts[2] is year.
+    		String[] parts = baseDate.split("-"); 
+    		
+    		// 2. Convert the parts[2] into integer.
+    		int year = Integer.parseInt(parts[2]);
+    		
+    		// 3. Add 1 to the year
+    		year = year + 1;
+    		
+    		// 4. Reassemble them into a string using "-" and go back.
+    		String newExpiryDate = parts[0] + "-" + parts[1] + "-" + year;
+    		
+    		return newExpiryDate;
+       }
+       
+      public void renewMembership(String memberId){
 		
+		// 1. Find the member (by Member ID).
 		Member target = searchMemberById(memberId);
 		
 		String level;
 		double fee;
-                
+		
+       // 2. Check if the member exists         
 		if(target==null) {
-			System.out.println("Member is not found");
+			System.out.println(RED+"Member is not found"+RESET);
 			return;
 		}else {
+			// Get their level to calculate the renewal fee
 			level = target.getMembershipLevel();
 			fee=getRenewalFee(level);
 		}
-                
-                LocalDate today = LocalDate.now();
-                LocalDate oldExpiry = convertToLocalDate(target.getExpiryDate());
 		
-                String baseDate;
+        //3. Get today's date and the old expiry date
+		LocalDate today = LocalDate.now();
+        LocalDate oldExpiry = convertToLocalDate(target.getExpiryDate());
+		
+        String baseDate;
                 
-                if(oldExpiry.isBefore(today)){
-                    baseDate = today.format(DateTimeFormatter.ofPattern("dd-mm-yyyy"));
-                }else {
-                    baseDate = target.getExpiryDate();
-                }
-		//String oldDate=target.getExpiryDate();
+        //4. Check if the membership is already expired
+        if(oldExpiry.isBefore(today)){
+        	// If already expired, start the new year from TODAY
+        	baseDate = today.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        }else {
+            // If not expired yet, add one year to the OLD expiry date
+        	baseDate = target.getExpiryDate();
+        }
+        
+		//5. Calculate the new date and update the member's record
 		String newDate=calculateExpiryDate(baseDate);
 		
-                target.setExpiryDate(newDate);
+        target.setExpiryDate(newDate);
 		target.setMembershipStatus("Active");
 		
-		System.out.println("Renewal Successful ");
+                System.out.println("====================================");
+		System.out.println(GREEN+"Renewal Successful "+RESET);
+                System.out.println("====================================");
 		System.out.println("Member ID: " + target.getMemberId());
 		System.out.println("Membership Level: " + level);
 		System.out.println("Renewal Fee: RM" + fee);
 		System.out.println("New Expiry Date: " + newDate);
+                System.out.println("====================================");
 	}
 	
 	public void updateContactNumber(String memberId,String newContactNumber) {
@@ -632,14 +582,14 @@ public class MemberManagement {
 		Member target = searchMemberById(memberId);//Find the member (by Member ID).
 
 		if(target==null) {
-			System.out.println("Member is not found");
+			System.out.println(RED+"Member is not found"+RESET);
 			return;
 		}else {
 			if (isValidContactNumber(newContactNumber)) { 
 	            target.setContactNumber(newContactNumber);
-	            System.out.println("Update Successful!");
+	            System.out.println(GREEN+"Update Successful!"+RESET);
 	        } else {
-	            System.out.println("Error: Invalid contact number format!");
+	            System.out.println(RED+"Error: Invalid contact number format!"+RESET);
 	        }
 		}
 	}
@@ -649,14 +599,14 @@ public class MemberManagement {
 		Member target = searchMemberById(memberId);//Find the member (by Member ID).
 
 		if(target==null) {
-			System.out.println("Member is not found");
+			System.out.println(RED+"Member is not found"+RESET);
 			return;
 		}else {
 			if (isValidAddress(address)) { 
 				target.setAddress(address);
-		        System.out.println("Update Successful!");
+		        System.out.println(GREEN+"Update Successful!"+RESET);
 	        } else {
-	            System.out.println("Error: Invalid address format!");
+	            System.out.println(RED+"Error: Invalid address format!"+RESET);
 	        }
 		}
 	}
@@ -666,14 +616,14 @@ public class MemberManagement {
 		Member target = searchMemberById(memberId);//Find the member (by Member ID).
 
 		if(target==null) {
-			System.out.println("Member is not found");
+			System.out.println(RED+"Member is not found"+RESET);
 			return;
 		}else {
 			if (isValidMembershipLevel(level)) { 
 				target.setMembershipLevel(level);
-		        System.out.println("Update Successful!");
+		        System.out.println(GREEN+"Update Successful!"+RESET);
 	        } else {
-	            System.out.println("Error: Invalid membership level!");
+	            System.out.println(RED+"Error: Invalid membership level!"+RESET);
 	        }
 		}
 	}
@@ -683,10 +633,10 @@ public class MemberManagement {
 		Member target = searchMemberById(memberId);//Find the member (by Member ID).
 
 		if(target==null) {
-			System.out.println("Member is not found");
+			System.out.println(RED+"Member is not found"+RESET);
 		}else {
 			target.setMembershipStatus("Inactive");
-	        System.out.println("Update Successful!");
+	        System.out.println(GREEN+"Update Successful!"+RESET);
 		}
 	}
 	
@@ -696,11 +646,11 @@ public class MemberManagement {
 		Member target = searchMemberById(memberId);//Find the member (by Member ID).
 	    
 		if(target==null) {
-			System.out.println("Member is not found");
+			System.out.println(RED+"Member is not found"+RESET);
 			return;
 		}else {
 			memberList.remove(target);
-			System.out.println("Member has been completely deleted!");
+			System.out.println(GREEN+"Member has been completely deleted!"+RESET);
 		}
 
 	}
@@ -726,10 +676,10 @@ public class MemberManagement {
 	        }
 	        
 	        writer.close(); 
-	        System.out.println("Store the data into members.txt successfully!");
+	        System.out.println(GREEN+"Store the data into members.txt successfully!"+RESET);
 	        
 	    } catch (Exception e) {
-	        System.out.println("Store unsuccessful：" + e.getMessage());
+	        System.out.println(RED+"Store unsuccessful：" + e.getMessage()+RESET);
 	    }
 	}
 	
@@ -743,6 +693,8 @@ public class MemberManagement {
 			if (!file.exists()) 
 	            return;
 			
+                        memberList.clear(); 
+                        
 			//2. use scanner to read the text in the document
 			Scanner fileScanner = new Scanner(file);
 			
@@ -759,30 +711,11 @@ public class MemberManagement {
 			}
 			
 			fileScanner.close();
-	        System.out.println("Load data successfully!");
+	        System.out.println(GREEN+"Load data successfully!"+RESET);
 	        
 		}catch (Exception e) {
-	        System.out.println("Load unsuccessful：" + e.getMessage());
+	        System.out.println(RED+"Load unsuccessful：" + e.getMessage()+RESET);
 	    }
 	}
-        
-        
-        public void viewAllMembers() {
-            
-            if (memberList.isEmpty()) {
-                System.out.println("No members in system.");
-                return;
-            }
-            
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------");
-            System.out.printf("\n%-10s %-20s %-18s %-12s %-15s %-15s\n", "ID", "Name", "Level", "Status", "Join Date", "Expiry Date" );
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------");
-            
-            for (Member m : memberList) {
-                System.out.printf("%-10s %-20s %-18s %-12s %-15s %-15s\n",
-                        m.getMemberId(), m.getName(), m.getMembershipLevel(), m.getMembershipStatus(), m.getDateOfJoining(), m.getExpiryDate());
-            }
-            System.out.println("-------------------------------------------------------------------------------------------------------------------------------------");
-        }
         
 }
